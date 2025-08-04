@@ -48,16 +48,17 @@ const Mainpage = ({ session }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { error } = await supabase
+    const { error, data } = await supabase
       .from("tasks")
       .insert({ ...newTask, email: session.user.email })
+      .select()
       .single();
 
     if (error) {
       console.error("Error in handleSubmit: ", error.message);
       return;
     }
-
+    setTasks((prev) => [...prev, data]);
     setNewTask({ title: "", description: "" });
   };
 
